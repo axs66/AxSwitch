@@ -1,17 +1,31 @@
-#import <Foundation/Foundation.h> // 添加这行
 #import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+static BOOL isEnabled() {
+    NSDictionary *prefs = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.axs.AxSwitch.plist"];
+    return [[prefs objectForKey:@"enabled"] boolValue];
+}
 
 %hook UISwitch
 
-- (NSNumber *)dns_bypass {
-    return @YES;
-}
+- (void)didMoveToWindow {
+    %orig;
 
-- (void)setDns_bypass:(NSNumber *)bypass {
-    if ([bypass boolValue]) {
-        %orig(bypass);
+    if (!isEnabled()) return;
+
+    NSDictionary *prefs = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.axs.AxSwitch.plist"];
+    if (!prefs) return;
+
+    NSNumber *sun = prefs[@"suncolor"];
+    NSNumber *moon = prefs[@"mooncolor"];
+
+    if ([sun isKindOfClass:[NSNumber class]]) {
+        self.onTintColor = [UIColor colorWithRed:1.0 green:0.8 blue:0.2 alpha:1.0]; // 示例颜色
     }
-    NSLog(@"[Apibug Crack] 阻止设置 dns_bypass 为 false");
+
+    if ([moon isKindOfClass:[NSNumber class]]) {
+        self.thumbTintColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.5 alpha:1.0]; // 示例颜色
+    }
 }
 
 %end
