@@ -46,12 +46,12 @@ jobs:
         id: release
         run: |
           VERSION=$(date +v%Y%m%d%H%M)
-          gh release create $VERSION ${{ github.workspace }}/packages/*.deb --title "SimpleSwitchCrack $VERSION" --notes "Automated release of .deb files"
+          gh release create $VERSION ${{ github.workspace }}/packages/*.deb --title "AxSwitch $VERSION" --notes "Automated release of .deb files"
         env:
           GH_TOKEN: ${{ secrets.PAT }}
 
       - name: Upload artifact (optional)
         uses: actions/upload-artifact@v4
         with:
-          name: SimpleSwitchCrack-deb
+          name: AxSwitch
           path: ${{ github.workspace }}/packages/*.deb
