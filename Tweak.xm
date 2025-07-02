@@ -1,6 +1,15 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
+// 通过十六进制数字转换为 UIColor
+static UIColor *colorFromHexNumber(NSNumber *hexNumber) {
+    unsigned int hexValue = [hexNumber unsignedIntValue];
+    CGFloat red = ((hexValue >> 16) & 0xFF) / 255.0;
+    CGFloat green = ((hexValue >> 8) & 0xFF) / 255.0;
+    CGFloat blue = (hexValue & 0xFF) / 255.0;
+    return [UIColor colorWithRed:red green:green blue:blue alpha:1.0];
+}
+
 static BOOL isEnabled() {
     NSDictionary *prefs = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.axs.AxSwitch.plist"];
     return [[prefs objectForKey:@"enabled"] boolValue];
@@ -16,15 +25,15 @@ static BOOL isEnabled() {
     NSDictionary *prefs = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.axs.AxSwitch.plist"];
     if (!prefs) return;
 
-    NSNumber *sun = prefs[@"suncolor"];
-    NSNumber *moon = prefs[@"mooncolor"];
+    NSNumber *sunColorNum = prefs[@"suncolor"];
+    NSNumber *moonColorNum = prefs[@"mooncolor"];
 
-    if ([sun isKindOfClass:[NSNumber class]]) {
-        self.onTintColor = [UIColor colorWithRed:1.0 green:0.8 blue:0.2 alpha:1.0]; // 示例颜色
+    if ([sunColorNum isKindOfClass:[NSNumber class]]) {
+        self.onTintColor = colorFromHexNumber(sunColorNum);
     }
 
-    if ([moon isKindOfClass:[NSNumber class]]) {
-        self.thumbTintColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.5 alpha:1.0]; // 示例颜色
+    if ([moonColorNum isKindOfClass:[NSNumber class]]) {
+        self.thumbTintColor = colorFromHexNumber(moonColorNum);
     }
 }
 
