@@ -3,7 +3,7 @@ name: Build and Release DEB
 on:
   push:
     tags:
-      - 'v*.*.*'  # 仅在推送 tag（如 v1.0.0）时触发
+      - 'v*.*.*'   # 仅在推送类似 v1.0.0 的 tag 时触发
   workflow_dispatch:
 
 jobs:
