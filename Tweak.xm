@@ -1,4 +1,6 @@
-#ifdef THEOS
+#import <Foundation/Foundation.h> // 添加这行
+#import <UIKit/UIKit.h>
+
 %hook UISwitch
 
 - (NSNumber *)dns_bypass {
@@ -13,4 +15,3 @@
 }
 
 %end
-#endif
