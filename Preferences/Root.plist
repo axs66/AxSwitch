@@ -1,46 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>items</key>
+    <key>Title</key>
+    <string>AxSwitch</string>
+    <key>PreferenceSpecifiers</key>
     <array>
         <dict>
-            <key>cell</key>
-            <string>PSGroupCell</string>
-            <key>label</key>
-            <string>AxSwitch 设置</string>
+            <key>Type</key>
+            <string>PSGroupSpecifier</string>
+            <key>Title</key>
+            <string>基本设置</string>
         </dict>
+
         <dict>
-            <key>cell</key>
-            <string>PSSwitchCell</string>
-            <key>label</key>
-            <string>启用 AxSwitch</string>
-            <key>key</key>
+            <key>Type</key>
+            <string>PSSwitchSpecifier</string>
+            <key>Key</key>
             <string>enabled</string>
-            <key>default</key>
-            <true/>
+            <key>Title</key>
+            <string>启用 AxSwitch</string>
+            <key>DefaultValue</key>
+            <false/>
         </dict>
+
         <dict>
-            <key>cell</key>
-            <string>PSSwitchCell</string>
-            <key>label</key>
-            <string>启用日间颜色</string>
-            <key>key</key>
+            <key>Type</key>
+            <string>PSGroupSpecifier</string>
+            <key>Title</key>
+            <string>自定义颜色</string>
+        </dict>
+
+        <dict>
+            <key>Type</key>
+            <string>PSTextFieldSpecifier</string>
+            <key>Key</key>
             <string>suncolor</string>
-            <key>default</key>
-            <false/>
+            <key>Title</key>
+            <string>太阳颜色（HEX）</string>
+            <key>DefaultValue</key>
+            <string>#FFD700</string>
         </dict>
+
         <dict>
-            <key>cell</key>
-            <string>PSSwitchCell</string>
-            <key>label</key>
-            <string>启用夜间颜色</string>
-            <key>key</key>
+            <key>Type</key>
+            <string>PSTextFieldSpecifier</string>
+            <key>Key</key>
             <string>mooncolor</string>
-            <key>default</key>
-            <false/>
+            <key>Title</key>
+            <string>月亮颜色（HEX）</string>
+            <key>DefaultValue</key>
+            <string>#00BFFF</string>
+        </dict>
+
+        <dict>
+            <key>Type</key>
+            <string>PSTextFieldSpecifier</string>
+            <key>Key</key>
+            <string>cloudcolor</string>
+            <key>Title</key>
+            <string>云朵颜色（HEX）</string>
+            <key>DefaultValue</key>
+            <string>#FFFFFF</string>
+        </dict>
+
+        <dict>
+            <key>Type</key>
+            <string>PSButtonCell</string>
+            <key>Title</key>
+            <string>重载配置（无需重启）</string>
+            <key>Action</key>
+            <string>respring</string>
         </dict>
     </array>
-    <key>title</key>
-    <string>AxSwitch 设置</string>
 </dict>
 </plist>
