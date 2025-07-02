@@ -8,7 +8,6 @@ TWEAK_NAME = AxSwitch
 
 AxSwitch_FILES = Tweak.xm
 AxSwitch_FRAMEWORKS = UIKit Foundation
-AxSwitch_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 AxSwitch_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
