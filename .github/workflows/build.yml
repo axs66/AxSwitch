@@ -8,7 +8,7 @@ on:
       - 'control'
     branches:
       - main
-       workflow_dispatch:  # 手动运行也支持
+  workflow_dispatch:  # 手动运行也支持
 
 jobs:
   build:
