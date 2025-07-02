@@ -2,9 +2,8 @@ name: Build and Release DEB
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - '.github/workflows/build.yml'
+    tags:
+      - 'v*.*.*'  # 仅在推送 tag（如 v1.0.0）时触发
   workflow_dispatch:
 
 jobs:
