@@ -1,37 +1,56 @@
-name: Build and Release DEB
+name: CI
 
 on:
   push:
-    branches: [ main ]
-    tags:
-      - 'v*.*.*'    # 当你推送 v1.0.0 等 tag 时，也触发构建
-  workflow_dispatch:  # 手动运行也支持
+    paths:
+      - '.github/workflows/build.yml'  # 监控 build.yml 文件的变化
+      - 'Tweak.xm'  # 增加对 Tweak.xm 文件的监控
+      - 'control' 
+    branches:
+      - 'main'  # 仅在推送到 main 分支时触发
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
-
-      - name: Set up Theos
-        run: |
-          git clone --recursive https://github.com/theos/theos.git ~/theos
-          echo "THEOS=~/theos" >> $GITHUB_ENV
-
-      - name: Install dependencies
-        run: |
-          brew install ldid dpkg
-
-      - name: Build deb
-        run: |
-          make clean package FINALPACKAGE=1
-
-      - name: Upload DEB to GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
+      - uses: actions/checkout@v3
         with:
-          files: ./packages/*.deb
+          submodules: true
+
+      - name: Check cache
+        run: |
+          echo upstream_heads=theos_version_commit-sdks_version_commit >> $GITHUB_ENV
+
+      - name: Use cache
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/theos
+          key: ${{ runner.os }}-theos-sdk-version
+
+      - name: Prepare Theos
+        uses: axs66/theos-action@main
+
+      - name: Build package
+        run: |
+          rm -f ${{ github.workspace }}/packages/*.deb
+          make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide
+
+      - name: List generated Deb packages
+        run: ls ${{ github.workspace }}/packages
+
+      - name: Create GitHub Release
+        id: release
+        run: |
+          VERSION=$(date +v%Y%m%d%H%M)
+          gh release create $VERSION ${{ github.workspace }}/packages/*.deb --title "ReachMyAbility $VERSION" --notes "Automated release of .deb files"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PAT }}  # 这里设置了 GitHub Token 用于授权
+
+      - name: Upload specific Deb packages
+        uses: actions/upload-artifact@v4.3.3
+        with:
+          name: ReachMyAbility
+          path: ${{ github.workspace }}/packages/*.deb
