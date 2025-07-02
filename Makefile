@@ -6,7 +6,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = AxSwitch
 
-AxSwitch_FILES = Tweak.xm Settings/AxSwitchPrefs.m
+AxSwitch_FILES = Tweak.xm
 AxSwitch_FRAMEWORKS = UIKit Foundation
 AxSwitch_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 AxSwitch_CFLAGS = -fobjc-arc
