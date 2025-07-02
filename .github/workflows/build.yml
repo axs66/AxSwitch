@@ -1,34 +1,62 @@
-name: Build and Release DEB
+name: CI
 
 on:
   push:
-    tags:
-      - 'v*.*.*'  # 仅在发布 tag（如 v1.0.0）时触发
+    branches: [ main ]
+    paths:
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout source
+      - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Set up Theos
-        run: |
-          git clone --recursive https://github.com/theos/theos.git ~/theos
-          echo "THEOS=~/theos" >> $GITHUB_ENV
-
-      - name: Install dependencies
-        run: |
-          brew install ldid dpkg
-
-      - name: Build deb
-        run: |
-          make clean package FINALPACKAGE=1
-
-      - name: Upload DEB to GitHub Release
-        uses: softprops/action-gh-release@v1
         with:
-          files: ./packages/*.deb
+          submodules: true
+
+      - name: Setup Theos environment
+        uses: axs66/theos-action@main
+
+      - name: Clone Cephei repo
+        run: |
+          rm -rf Cephei
+          git clone --depth=1 https://github.com/hbang/libcephei.git Cephei
+
+      - name: Build Cephei static libraries only
+        run: |
+          cd Cephei
+          make clean
+          make LIBRARIES=CepheiPrefs
+
+          # 复制静态库到 lib 目录供主项目链接
+          mkdir -p lib
+          cp .theos/obj/debug/arm64/libCepheiPrefs.a lib/ || true
+          cp .theos/obj/debug/arm64/libCephei.a lib/ || true
+          cp .theos/obj/debug/arm64/libCepheiSpringBoard.a lib/ || true
+
+      - name: Clean previous packages
+        run: rm -f ${{ github.workspace }}/packages/*.deb
+
+      - name: Build tweak and bundle packages
+        run: |
+          make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+
+      - name: List generated DEBs
+        run: ls -lh ${{ github.workspace }}/packages
+
+      - name: Create GitHub Release
+        if: github.event_name == 'push'
+        run: |
+          VERSION=$(date +v%Y%m%d%H%M)
+          gh release create $VERSION ${{ github.workspace }}/packages/*.deb --title "SimpleSwitchCrack $VERSION" --notes "自动构建 .deb 安装包"
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GH_TOKEN: ${{ secrets.PAT }}
+
+      - name: Upload DEB to workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: SimpleSwitchCrack
+          path: ${{ github.workspace }}/packages/*.deb
