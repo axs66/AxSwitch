@@ -1,8 +1,10 @@
-Package: com.axs.simpleswitchcrack
-Name: SimpleSwitchCrack
-Version: 1.0.0
-Architecture: iphoneos-arm
-Description: 破解 SimpleSwitch 的无根补丁，支持配置自动激活、绕过验证、内存补丁等
+Package: com.axs.axswitch
+Name: AxSwitch
+Author: Axs
 Maintainer: Axs
-Author: Apibug
-Depends: firmware (>= 16.0)
+Architecture: iphoneos-arm
+Section: Tweaks
+Version: 1.0.0
+Description: 全局 UI 开关插件，自定义颜色，支持热重载
+Depends: mobilesubstrate
+Tag: role::tweak, purpose::customize
